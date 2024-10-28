@@ -1,0 +1,104 @@
+https://leetcode.com/problems/largest-rectangle-in-histogram/submissions/1436256258/
+
+
+class Stack {
+  constructor() {
+    this.stack = [];
+  }
+
+  // Push a pair to the stack
+  push(pair) {
+    this.stack.push(pair);
+  }
+
+  // Remove and return the top pair from the stack
+  pop() {
+    if (this.isEmpty()) {
+      console.log("Stack is empty");
+      return null;
+    }
+    return this.stack.pop();
+  }
+
+  // Return the top pair without removing it
+ top() {
+    if (this.isEmpty()) {
+      console.log("Stack is empty");
+      return null;
+    }
+    return this.stack[this.stack.length - 1];
+  }
+
+  // Check if the stack is empty
+  isEmpty() {
+    return this.stack.length === 0;
+  }
+
+  // Get the size of the stack
+  size() {
+    return this.stack.length;
+  }
+}
+var largestRectangleArea = function(heights) {
+   var nsl=[];
+   var stack=new Stack();
+
+   for(var i=0;i<heights.length;i++){
+    if(stack.isEmpty()){
+        nsl.push(-1);
+        stack.push([heights[i],i]);
+    }
+    else if(!stack.isEmpty()&&stack.top()[0]<heights[i]){
+        nsl.push(stack.top()[1]);
+        stack.push([heights[i],i]);
+    }
+    else if(!stack.isEmpty()&&stack.top()[0]>=heights[i]){
+        while(!stack.isEmpty()&&stack.top()[0]>=heights[i]){
+            stack.pop();
+        }
+        if(stack.isEmpty()){
+        nsl.push(-1);
+        stack.push([heights[i],i]);
+    }
+    else if(!stack.isEmpty()&&stack.top()[0]<heights[i]){
+        nsl.push(stack.top()[1]);
+        stack.push([heights[i],i]);
+    }
+    }
+   }
+   var nsr=Array(heights.length);
+   var stack1=new Stack();
+
+   for(var i=heights.length-1;i>=0;i--){
+    if(stack1.isEmpty()){
+        nsr[i]=heights.length;
+        stack1.push([heights[i],i]);
+    }
+    else if(!stack1.isEmpty()&&stack1.top()[0]<heights[i]){
+        nsr[i]=stack1.top()[1];
+        stack1.push([heights[i],i]);
+    }
+    else if(!stack1.isEmpty()&&stack1.top()[0]>=heights[i]){
+        while(!stack1.isEmpty()&&stack1.top()[0]>=heights[i]){
+            stack1.pop();
+        }
+         if(stack1.isEmpty()){
+        nsr[i]=heights.length;
+        stack1.push([heights[i],i]);
+    }
+    else if(!stack1.isEmpty()&&stack1.top()[0]<heights[i]){
+        nsr[i]=stack1.top()[1];
+        stack1.push([heights[i],i]);
+    }
+    }
+   }
+
+   var maxArea=0;
+   for(var i=0;i<heights.length;i++){
+    var width=nsr[i]-nsl[i]-1;
+    var height=heights[i];
+    var area=height*width;
+    maxArea=Math.max(maxArea,area);
+   }
+   return maxArea;
+}
